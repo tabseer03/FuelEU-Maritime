@@ -71,7 +71,7 @@ Varuna/
 ---
 
 ### 1️⃣ Backend Setup
-
+```
 cd backend
 npm install
 docker compose up -d        # Starts PostgreSQL container
@@ -81,15 +81,15 @@ npm run dev                 # Runs server on port 4000
 
 (Optional) Launch Prisma Studio:
 npx prisma studio           # Opens at http://localhost:5555
-
+```
 ---
 
 ### 2️⃣ Frontend Setup
-
+```
 cd frontend
 npm install
 npm run dev                 # Opens app at http://localhost:5173
-
+```
 ---
 
 ## API Endpoints
@@ -133,8 +133,11 @@ Implements Article 21 (Pooling):
 ## Testing
 
 ### Run backend tests
+```
 cd backend
 npm run test
+```
+
 
 Tests include:
 - Compliance balance calculations
