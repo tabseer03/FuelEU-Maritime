@@ -1,55 +1,80 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
-type CompareRow = {
+interface RouteCompare {
   routeId: string;
-  baseline: number;
-  comparison: number;
+  ghgIntensity: number;
   percentDiff: number;
   compliant: boolean;
-};
+}
 
 export default function CompareTab() {
-  const [rows, setRows] = useState<CompareRow[]>([]);
-  const [baseline, setBaseline] = useState<number | null>(null);
+  const [data, setData] = useState<RouteCompare[]>([]);
+  const [target, setTarget] = useState<number>(0);
+  const [baseline, setBaseline] = useState<string>("");
 
-  async function load() {
-    const res = await axios.get('/api/routes/comparison');
-    setBaseline(res.data.baseline);
-    setRows(res.data.results);
-  }
-
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    axios.get("/api/routes/comparison").then((res) => {
+      setData(res.data.comparison);
+      setTarget(res.data.target);
+      setBaseline(res.data.baseline.routeId);
+    });
+  }, []);
 
   return (
-    <div>
-      <h2 className="text-lg font-semibold mb-2">Baseline: {baseline ?? '—'}</h2>
-      <div style={{ height: 300 }}>
-        <ResponsiveContainer>
-          <BarChart data={rows}>
-            <XAxis dataKey="routeId" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="comparison" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+    <div className="p-6">
+      <h2 className="text-xl font-semibold mb-4">
+        GHG Intensity Comparison
+      </h2>
 
-      <table className="min-w-full mt-4">
-        <thead className="border-b"><tr><th>route</th><th>baseline</th><th>comparison</th><th>% diff</th><th>compliant</th></tr></thead>
+      <p className="mb-3 text-gray-600">
+        Target intensity: <strong>{target.toFixed(4)} gCO₂e/MJ</strong> |{" "}
+        Baseline route: <strong>{baseline}</strong>
+      </p>
+
+      <table className="border-collapse border w-full mb-6">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="border p-2">Route ID</th>
+            <th className="border p-2">GHG Intensity</th>
+            <th className="border p-2">% Difference</th>
+            <th className="border p-2">Compliant</th>
+          </tr>
+        </thead>
         <tbody>
-          {rows.map(r => (
-            <tr key={r.routeId} className="border-b">
-              <td className="p-2">{r.routeId}</td>
-              <td>{r.baseline.toFixed(3)}</td>
-              <td>{r.comparison.toFixed(3)}</td>
-              <td>{r.percentDiff.toFixed(2)}%</td>
-              <td>{r.compliant ? '✅' : '❌'}</td>
+          {data.map((r) => (
+            <tr key={r.routeId}>
+              <td className="border p-2">{r.routeId}</td>
+              <td className="border p-2">{r.ghgIntensity}</td>
+              <td className="border p-2">
+                {r.percentDiff.toFixed(2)}%
+              </td>
+              <td className="border p-2">
+                {r.compliant ? "✅" : "❌"}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={data}>
+          <XAxis dataKey="routeId" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="ghgIntensity" fill="#60a5fa" name="GHG Intensity" />
+        </BarChart>
+      </ResponsiveContainer>
     </div>
   );
 }

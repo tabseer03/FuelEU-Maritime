@@ -1,0 +1,19 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Environment files
+.env
+
+# Build outputs
+dist/
+coverage/
+
+# Prisma
+backend/prisma/migrations/
+
+# IDE / system files
+.vscode/
+.DS_Store
+Thumbs.db

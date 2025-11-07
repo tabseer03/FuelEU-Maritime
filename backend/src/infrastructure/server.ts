@@ -3,12 +3,14 @@ import routesRouter from '../adapters/inbound/http/routes';
 import complianceRouter from '../adapters/inbound/http/compliance';
 import bankingRouter from '../adapters/inbound/http/banking';
 import poolsRouter from '../adapters/inbound/http/pools';
+import routesCompare from "../adapters/inbound/http/routesCompare";
 import cors from 'cors';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use("/", routesCompare);
 app.use('/routes', routesRouter);
 app.use('/compliance', complianceRouter);
 app.use('/banking', bankingRouter);
