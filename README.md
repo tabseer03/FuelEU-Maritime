@@ -16,7 +16,7 @@ This project was developed as part of the FuelEU Full Stack Developer Assignment
 ---
 
 ## Architecture
-
+```
 Varuna/
 ├── backend/
 │   ├── prisma/                # Prisma ORM schema & migrations
@@ -39,7 +39,7 @@ Varuna/
 ├── AGENT_WORKFLOW.md          # Detailed AI usage log
 ├── README.md                  # This file
 └── REFLECTION.md              # Personal reflection & learnings
-
+```
 ---
 
 ## Tech Stack
